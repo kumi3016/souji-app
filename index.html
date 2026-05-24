@@ -1,3 +1,4 @@
+
 JavaScript
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -18,7 +19,7 @@ function getTodayDuty() {
     "早藤さん",
     "中山さん",
     "山本龍弘さん",
-    "奥さん",
+    "奥様",
     "三好さん",
     "尾鷲さん",
     "森田さん",
@@ -28,28 +29,27 @@ function getTodayDuty() {
 
   // 休みの人を除外
   const checked = document.querySelectorAll("input:checked");
+
   checked.forEach(c => {
     members = members.filter(m => m !== c.value);
   });
 
+  // シャッフル
   shuffle(members);
 
   const duties = [
     "男子トイレ",
     "女子トイレ",
     "軽作業側掃除機",
-    "PC側掃除機",
     "台所",
-    "玄関",
-    "ごみ捨て",
-    "炊飯器の釜洗い"
+    "玄関"
   ];
 
   let result = "";
 
-  duties.forEach((duty, i) => {
-    if (members[i]) {
-      result += `<b>${duty}</b>: ${members[i]}<br>`;
+  duties.forEach((duty, index) => {
+    if (members[index]) {
+      result += `${duty}: ${members[index]}<br>`;
     }
   });
 
