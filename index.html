@@ -1,0 +1,30 @@
+
+<!DOCTYPE html><html><head><meta charset='UTF-8'>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<style>body{font-family:sans-serif;padding:15px} .box{border:1px solid #ccc;padding:10px;border-radius:10px;margin:10px 0}</style>
+</head><body>
+<h2>掃除当番16人版</h2>
+<p>休みの人に✔して「今日の当番」</p>
+<div id='checks'></div>
+<button onclick='assign()'>今日の当番</button>
+<div class='box' id='out'></div>
+<script>
+const members=[["赤松さん", ["男子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["井関さん", ["男子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["渚さん", ["女子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["松川さん", ["女子トイレ"]], ["岡田さん", ["男子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["森川さん", ["男子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["中尾さん", ["男子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["早藤さん", ["女子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["中山さん", ["女子トイレ", "軽作業側掃除機", "台所", "玄関"]], ["山本龍弘さん", ["男子トイレ", "PC側掃除機", "台所", "玄関", "ごみ捨て"]], ["奥さん", ["男子トイレ", "PC側掃除機", "台所", "玄関", "ごみ捨て"]], ["三好さん", ["男子トイレ", "PC側掃除機", "台所", "玄関", "炊飯器の釜洗い"]], ["尾鷲さん", ["男子トイレ", "PC側掃除機", "台所", "玄関", "炊飯器の釜洗い"]], ["森田さん", ["PC側掃除機", "玄関"]], ["山下さん", ["女子トイレ", "PC側掃除機", "台所", "玄関", "ごみ捨て"]], ["山本久美子", ["女子トイレ", "PC側掃除機", "台所", "玄関", "ごみ捨て"]]];
+const tasks=["男子トイレ","女子トイレ","軽作業側掃除機","PC側掃除機","台所","玄関","ごみ捨て","炊飯器の釜洗い"];
+
+checks.innerHTML=members.map((m,i)=>`<label><input type='checkbox' id='c${i}'>${m[0]}</label><br>`).join("");
+
+function assign(){
+ let day=(new Date()).getDate();
+ let active=members.filter((m,i)=>!document.getElementById('c'+i).checked);
+ let txt="";
+ tasks.forEach((t,idx)=>{
+   let ok=active.filter(m=>m[1].includes(t));
+   let p= ok.length? ok[(day+idx)%ok.length][0]:"担当なし";
+   txt+=`<b>${t}</b>: ${p}<br>`;
+ });
+ out.innerHTML=txt;
+}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+</script></body></html>
