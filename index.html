@@ -1,4 +1,23 @@
-JavaScript
+
+HTML
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>掃除当番アプリ</title>
+</head>
+
+<body>
+
+<h1>今日の掃除当番</h1>
+
+<button onclick="getTodayDuty()">今日の当番を決める</button>
+
+<div id="result"></div>
+
+<script>
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -8,50 +27,51 @@ function shuffle(array) {
 }
 
 function getTodayDuty() {
-  let members = [
-    "赤松さん",
-    "井関さん",
-    "渚さん",
-    "岡田さん",
-    "森川さん",
-    "中尾さん",
-    "早藤さん",
-    "中山さん",
-    "山本龍弘さん",
-    "奥さん",
-    "三好さん",
-    "尾鷲さん",
-    "森田さん",
-    "山下さん",
-    "山本久美子"
-  ];
 
-  // 休みの人を除外
-  const checked = document.querySelectorAll("input:checked");
-  checked.forEach(c => {
-    members = members.filter(m => m !== c.value);
-  });
+let members = [
+"赤松さん",
+"井関さん",
+"渚さん",
+"岡田さん",
+"森川さん",
+"中尾さん",
+"早藤さん",
+"中山さん",
+"山本龍弘さん",
+"奥さん",
+"三好さん",
+"尾鷲さん",
+"森田さん",
+"山下さん",
+"山本久美子"
+];
 
-  shuffle(members);
+shuffle(members);
 
-  const duties = [
-    "男子トイレ",
-    "女子トイレ",
-    "軽作業側掃除機",
-    "PC側掃除機",
-    "台所",
-    "玄関",
-    "ごみ捨て",
-    "炊飯器の釜洗い"
-  ];
+const duties = [
+"男子トイレ",
+"女子トイレ",
+"軽作業側掃除機",
+"PC側掃除機",
+"台所",
+"玄関",
+"ごみ捨て",
+"炊飯器の釜洗い"
+];
 
-  let result = "";
+let result = "";
 
-  duties.forEach((duty, i) => {
-    if (members[i]) {
-      result += `<b>${duty}</b>: ${members[i]}<br>`;
-    }
-  });
+duties.forEach((duty,i)=>{
+ if(members[i]){
+   result += `<p>${duty}: ${members[i]}</p>`;
+ }
+});
 
-  document.getElementById("result").innerHTML = result;
+document.getElementById("result").innerHTML=result;
+
 }
+
+</script>
+
+</body>
+</html>
