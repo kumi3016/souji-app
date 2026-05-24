@@ -1,3 +1,4 @@
+
 JavaScript
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -7,51 +8,74 @@ function shuffle(array) {
   return array;
 }
 
+const members = [
+  {name:"赤松さん", jobs:["男子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"井関さん", jobs:["男子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"渚さん", jobs:["女子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"松川さん", jobs:["女子トイレ"]},
+  {name:"岡田さん", jobs:["男子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"森川さん", jobs:["男子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"中尾さん", jobs:["男子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"早藤さん", jobs:["女子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"中山さん", jobs:["女子トイレ","軽作業側掃除機","台所","玄関"]},
+  {name:"山本龍弘さん", jobs:["男子トイレ","PC側掃除機","台所","玄関","ごみ捨て"]},
+  {name:"奥さん", jobs:["男子トイレ","PC側掃除機","台所","玄関","ごみ捨て"]},
+  {name:"三好さん", jobs:["男子トイレ","PC側掃除機","台所","玄関","炊飯器の釜洗い"]},
+  {name:"尾鷲さん", jobs:["男子トイレ","PC側掃除機","台所","玄関","炊飯器の釜洗い"]},
+  {name:"森田さん", jobs:["PC側掃除機","玄関"]},
+  {name:"山下さん", jobs:["女子トイレ","PC側掃除機","台所","玄関","ごみ捨て"]},
+  {name:"山本久美子", jobs:["女子トイレ","PC側掃除機","台所","玄関","ごみ捨て"]}
+];
+
+const tasks = [
+  "男子トイレ",
+  "女子トイレ",
+  "軽作業側掃除機",
+  "PC側掃除機",
+  "台所",
+  "玄関",
+  "ごみ捨て",
+  "炊飯器の釜洗い"
+];
+
 function getTodayDuty() {
-  let members = [
-    "赤松さん",
-    "井関さん",
-    "渚さん",
-    "岡田さん",
-    "森川さん",
-    "中尾さん",
-    "早藤さん",
-    "中山さん",
-    "山本龍弘さん",
-    "奥さん",
-    "三好さん",
-    "尾鷲さん",
-    "森田さん",
-    "山下さん",
-    "山本久美子"
+
+  //休みの人をここに入力
+  const holidays = [
+    //"赤松さん",
+    //"山本久美子"
   ];
 
-  // 休みの人を除外
-  const checked = document.querySelectorAll("input:checked");
-  checked.forEach(c => {
-    members = members.filter(m => m !== c.value);
-  });
+  let available = members.filter(
+    person => !holidays.includes(person.name)
+  );
 
-  shuffle(members);
+  let result = {};
+  let usedPeople = [];
 
-  const duties = [
-    "男子トイレ",
-    "女子トイレ",
-    "軽作業側掃除機",
-    "PC側掃除機",
-    "台所",
-    "玄関",
-    "ごみ捨て",
-    "炊飯器の釜洗い"
-  ];
+  tasks.forEach(task => {
 
-  let result = "";
+    let candidates = available.filter(
+      p =>
+      p.jobs.includes(task) &&
+      !usedPeople.includes(p.name)
+    );
 
-  duties.forEach((duty, i) => {
-    if (members[i]) {
-      result += `<b>${duty}</b>: ${members[i]}<br>`;
+    shuffle(candidates);
+
+    if (candidates.length > 0) {
+      result[task] = candidates[0].name;
+      usedPeople.push(candidates[0].name);
+    } else {
+      result[task] = "担当者なし";
     }
   });
 
-  document.getElementById("result").innerHTML = result;
+  let output = "今日の掃除当番\n\n";
+
+  for (let task in result) {
+    output += `${task}：${result[task]}\n`;
+  }
+
+  document.getElementById("result").innerText = output;
 }
