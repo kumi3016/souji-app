@@ -1,5 +1,20 @@
 
-JavaScript
+HTML
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>掃除当番</title>
+</head>
+<body>
+
+<h1>掃除当番</h1>
+
+<button onclick="getTodayDuty()">今日の当番</button>
+
+<div id="result"></div>
+
+<script>
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -19,7 +34,7 @@ function getTodayDuty() {
     "早藤さん",
     "中山さん",
     "山本龍弘さん",
-    "奥さん",
+    "奥様",
     "三好さん",
     "尾鷲さん",
     "森田さん",
@@ -27,14 +42,6 @@ function getTodayDuty() {
     "山本久美子"
   ];
 
-  // 休みの人を除外
-  const checked = document.querySelectorAll("input:checked");
-
-  checked.forEach(c => {
-    members = members.filter(m => m !== c.value);
-  });
-
-  // シャッフル
   shuffle(members);
 
   const duties = [
@@ -47,11 +54,13 @@ function getTodayDuty() {
 
   let result = "";
 
-  duties.forEach((duty, index) => {
-    if (members[index]) {
-      result += `${duty}: ${members[index]}<br>`;
-    }
+  duties.forEach((duty,index)=>{
+    result += `<p>${duty}: ${members[index]}</p>`;
   });
 
   document.getElementById("result").innerHTML = result;
 }
+</script>
+
+</body>
+</html>
