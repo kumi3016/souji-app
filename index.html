@@ -1,57 +1,66 @@
-HTML
-<script>
+
+JavaScript
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
-
-  
-JavaScript
-function shuffle(array) {
-  let arr = [...array];
-
-  for (let i = arr.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-
-  return arr;
 }
 
 function getTodayDuty() {
+  let members = [
+    "赤松さん",
+    "井関さん",
+    "渚さん",
+    "松川さん",
+    "岡田さん",
+    "森川さん",
+    "中尾さん",
+    "早藤さん",
+    "中山さん",
+    "山本龍弘さん",
+    "奥さん",
+    "三好さん",
+    "尾鷲さん",
+    "森田さん",
+    "山下さん",
+    "山本久美子"
+  ];
 
-  let duties = {
-    "男子トイレ": ["赤松さん","井関さん","岡田さん"],
-    "女子トイレ": ["渚さん","松川さん"],
-    "軽作業側掃除機": ["赤松さん","井関さん","渚さん","山本久美子"],
-    "PC側掃除機": ["中尾さん"],
-    "台所": ["赤松さん","井関さん","渚さん","山下さん"],
-    "玄関": ["赤松さん","井関さん","渚さん","森田さん"],
-    "ごみ捨て": ["尾鷲さん"],
-    "炊飯器の釜洗い": ["井関さん"]
-  };
+  // 休みの人除外
+  let absent = [];
+  document.querySelectorAll("input[type=checkbox]:checked")
+    .forEach(box => absent.push(box.value));
 
+  let available = members.filter(m => !absent.includes(m));
+
+  // シャッフル
+  shuffle(available);
+
+  // 使った人を記録
   let used = [];
-  let result = "";
 
-  for(let place in duties){
+  function pick() {
+    let person = available.find(p => !used.includes(p));
 
-    let candidates = shuffle(
-      duties[place].filter(name => !used.includes(name))
-    );
-
-    let person = candidates[0];
-
-    if(!person){
-      person = duties[place][0];
+    if (person) {
+      used.push(person);
+      return person;
     }
-
-    used.push(person);
-
-    result += `<p>${place}: ${person}</p>`;
+    return "担当不足";
   }
+
+  let result = `
+男子トイレ：${pick()}<br>
+女子トイレ：${pick()}<br>
+軽作業側掃除機：${pick()}<br>
+PC側掃除機：${pick()}<br>
+台所：${pick()}<br>
+玄関：${pick()}<br>
+ごみ捨て：${pick()}<br>
+炊飯器の釜洗い：${pick()}
+`;
 
   document.getElementById("result").innerHTML = result;
 }
