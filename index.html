@@ -1,81 +1,186 @@
-JavaScript
-const members = [
-  { name: "赤松さん", jobs: ["男子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "井関さん", jobs: ["男子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "渚さん", jobs: ["女子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "松川さん", jobs: ["女子トイレ"] },
-  { name: "岡田さん", jobs: ["男子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "中尾さん", jobs: ["男子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "森川さん", jobs: ["男子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "早藤さん", jobs: ["女子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "中山さん", jobs: ["女子トイレ","台所","玄関","軽作業側掃除機"] },
-  { name: "山本(龍)さん", jobs: ["男子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"] },
-  { name: "奥さん", jobs: ["男子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"] },
-  { name: "三好さん", jobs: ["男子トイレ","台所","玄関","PC側掃除機","炊飯器の釜洗い"] },
-  { name: "尾鷲さん", jobs: ["男子トイレ","台所","玄関","PC側掃除機","炊飯器の釜洗い"] },
-  { name: "森田さん", jobs: ["玄関","PC側掃除機"] },
-  { name: "山下さん", jobs: ["女子トイレ","台所","玄関","軽作業側掃除機","PC側掃除機","ゴミ捨て"] },
-  { name: "山本(久)さん", jobs: ["女子トイレ","台所","玄関","軽作業側掃除機","PC側掃除機","ゴミ捨て"] },
-  { name: "西さん", jobs: ["男子トイレ","台所","炊飯器の釜洗い"] }
-];
 
-const tasks = [
-  "男子トイレ",
-  "女子トイレ",
-  "台所",
-  "玄関",
-  "軽作業側掃除機",
-  "PC側掃除機",
-  "ゴミ捨て",
-  "炊飯器の釜洗い"
-];
+HTML
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>掃除当番</title>
 
-function shuffle(arr){
-  return arr.sort(()=>Math.random()-0.5);
+<style>
+body{
+font-family:sans-serif;
+padding:20px;
+background:#f3f3f3;
 }
 
-function assignTasks(holidayList=[]){
+.box{
+background:white;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+}
 
-  let result = {};
-  let used = [];
+button{
+width:100%;
+padding:15px;
+font-size:20px;
+}
 
-  //休みの人除外
-  let available = members.filter(
-    m => !holidayList.includes(m.name)
-  );
+.result{
+line-height:2;
+font-size:20px;
+}
+</style>
+</head>
 
-  tasks.forEach(task=>{
+<body>
 
-    let candidates = available.filter(
-      m =>
-      m.jobs.includes(task) &&
-      !used.includes(m.name)
-    );
+<h1>掃除当番</h1>
 
-    if(candidates.length>0){
+<div class="box">
+<h2>休み設定</h2>
 
-      let selected =
-      shuffle(candidates)[0];
+<div id="holidayList"></div>
 
-      result[task]=selected.name;
+</div>
 
-      //重複禁止
-      used.push(selected.name);
+<button onclick="createDuty()">
+当番を作成
+</button>
 
-    }else{
-      result[task]="担当なし";
-    }
+<div class="box">
+<h1>今日の担当</h1>
 
-  });
+<div id="result" class="result">
 
-  return result;
+</div>
+</div>
+
+
+<script>
+
+const members=[
+{name:"赤松さん",jobs:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"井関さん",jobs:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"渚さん",jobs:["女子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"松川さん",jobs:["女子トイレ"]},
+{name:"岡田さん",jobs:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"中尾さん",jobs:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"森川さん",jobs:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"早藤さん",jobs:["女子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"中山さん",jobs:["女子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"山本(龍)さん",jobs:["男子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]},
+{name:"奥さん",jobs:["男子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]},
+{name:"三好さん",jobs:["男子トイレ","台所","玄関","PC側掃除機","炊飯器の釜洗い"]},
+{name:"尾鷲さん",jobs:["男子トイレ","台所","玄関","PC側掃除機","炊飯器の釜洗い"]},
+{name:"森田さん",jobs:["玄関","PC側掃除機"]},
+{name:"山下さん",jobs:["女子トイレ","台所","玄関","軽作業側掃除機","PC側掃除機","ゴミ捨て"]},
+{name:"山本(久)さん",jobs:["女子トイレ","台所","玄関","軽作業側掃除機","PC側掃除機","ゴミ捨て"]},
+{name:"西さん",jobs:["男子トイレ","台所","炊飯器の釜洗い"]}
+];
+
+const tasks=[
+"男子トイレ",
+"女子トイレ",
+"台所",
+"玄関",
+"軽作業側掃除機",
+"PC側掃除機",
+"ゴミ捨て",
+"炊飯器の釜洗い"
+];
+
+
+const holidayDiv=document.getElementById("holidayList");
+
+members.forEach(person=>{
+
+holidayDiv.innerHTML+=`
+<label>
+<input type="checkbox"
+value="${person.name}">
+${person.name}
+</label><br>
+`;
+
+});
+
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+let j=Math.floor(
+Math.random()*(i+1)
+);
+
+[array[i],array[j]]=
+[array[j],array[i]];
+
+}
+
+return array;
+
 }
 
 
-//休み入力例
-let todayHoliday = [
-  "赤松さん",
-  "山本(龍)さん"
-];
+function createDuty(){
 
-console.log(assignTasks(todayHoliday));
+const checked=[
+...document.querySelectorAll(
+'input[type="checkbox"]:checked'
+)
+].map(x=>x.value);
+
+let available=
+members.filter(
+m=>!checked.includes(m.name)
+);
+
+let used=[];
+
+let resultHTML="";
+
+tasks.forEach(task=>{
+
+let candidates=
+available.filter(
+m=>
+m.jobs.includes(task)
+&&!used.includes(m.name)
+);
+
+if(candidates.length){
+
+let person=
+shuffle(candidates)[0];
+
+used.push(person.name);
+
+resultHTML+=`
+<b>${task}</b>
+→ ${person.name}<br>
+`;
+
+}else{
+
+resultHTML+=`
+<b>${task}</b>
+→ 担当なし<br>
+`;
+
+}
+
+});
+
+document.getElementById(
+"result"
+).innerHTML=resultHTML;
+
+}
+
+</script>
+
+</body>
+</html>
