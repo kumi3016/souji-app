@@ -1,24 +1,203 @@
 
-・赤松さん(男子トイレ、台所、玄関、軽作業側掃除機)
-・井関さん(男子トイレ、台所、玄関、軽作業側掃除機)
-・渚さん(女子トイレ、台所、玄関、軽作業側掃除機)
-・松川さん(女子トイレ)
-・岡田さん(男子トイレ、台所、玄関、軽作業側掃除機)
-・中尾さん(男子トイレ、台所、玄関、軽作業側掃除機)
-・森川さん(男子トイレ、台所、玄関、軽作業側掃除機)
-・早藤さん(女子トイレ、台所、玄関、軽作業側掃除機)
-・中山さん(女子トイレ、台所、玄関、軽作業側掃除機)
-・山本(龍)さん(男子トイレ、台所、玄関、PC側掃除機、ゴミ捨て)
-・奥さん(男子トイレ、台所、玄関、PC側掃除機、ゴミ捨て)
-・三好さん(男子トイレ、台所、玄関、PC側掃除機、炊飯器の釜洗い)
-・尾鷲さん男子トイレ、台所、玄関、PC側掃除機、炊飯器の釜洗い)
-・森田さん(玄関、PC側掃除機)
-・山下さん(女子トイレ、台所、玄関、軽作業側掃除機、PC側掃除機、ゴミ捨て)
-・山本(久)さん(女子トイレ、台所、玄関、軽作業側掃除機、PC側掃除機、ゴミ捨て)
-・大下倉さん(女子トイレ、台所、玄関、PC側掃除機、ゴミ捨て)
-・森さん(女子トイレ、台所、玄関、PC側掃除機、ゴミ捨て)
-・小山さん(女子トイレ、台所、玄関、PC側掃除機、軽作業側掃除機、ゴミ捨て)
-・小櫃さん(男子トイレ、台所、玄関、PC側掃除機、軽作業側掃除機、ゴミ捨て)
-・杉村さん(女子トイレ、台所、玄関、PC側掃除機、ゴミ捨て)
-・山口さん(男子トイレ、台所、玄関、PC側掃除機、ゴミ捨て)
-重複禁止、休みチェックいれるもの作成
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>掃除当番作成</title>
+
+<style>
+body{
+    font-family:sans-serif;
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+    background:#f5f7fa;
+}
+
+h1{
+    text-align:center;
+}
+
+.container{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+
+.people{
+    flex:1;
+    min-width:300px;
+}
+
+.result{
+    flex:1;
+    min-width:300px;
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:15px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:8px;
+    text-align:left;
+}
+
+th{
+    background:#4caf50;
+    color:white;
+}
+</style>
+</head>
+<body>
+
+<h1>掃除当番作成</h1>
+
+<div class="container">
+
+<div class="card people">
+<h2>休みチェック</h2>
+<div id="holidayList"></div>
+
+<button onclick="createSchedule()">当番作成</button>
+</div>
+
+<div class="card result">
+<h2>担当結果</h2>
+<div id="result"></div>
+</div>
+
+</div>
+
+<script>
+
+const members = [
+{name:"赤松さん",tasks:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"井関さん",tasks:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"渚さん",tasks:["女子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"松川さん",tasks:["女子トイレ"]},
+{name:"岡田さん",tasks:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"中尾さん",tasks:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"森川さん",tasks:["男子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"早藤さん",tasks:["女子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"中山さん",tasks:["女子トイレ","台所","玄関","軽作業側掃除機"]},
+{name:"山本(龍)さん",tasks:["男子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]},
+{name:"奥さん",tasks:["男子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]},
+{name:"三好さん",tasks:["男子トイレ","台所","玄関","PC側掃除機","炊飯器の釜洗い"]},
+{name:"尾鷲さん",tasks:["男子トイレ","台所","玄関","PC側掃除機","炊飯器の釜洗い"]},
+{name:"森田さん",tasks:["玄関","PC側掃除機"]},
+{name:"山下さん",tasks:["女子トイレ","台所","玄関","軽作業側掃除機","PC側掃除機","ゴミ捨て"]},
+{name:"山本(久)さん",tasks:["女子トイレ","台所","玄関","軽作業側掃除機","PC側掃除機","ゴミ捨て"]},
+{name:"大下倉さん",tasks:["女子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]},
+{name:"森さん",tasks:["女子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]},
+{name:"小山さん",tasks:["女子トイレ","台所","玄関","PC側掃除機","軽作業側掃除機","ゴミ捨て"]},
+{name:"小櫃さん",tasks:["男子トイレ","台所","玄関","PC側掃除機","軽作業側掃除機","ゴミ捨て"]},
+{name:"杉村さん",tasks:["女子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]},
+{name:"山口さん",tasks:["男子トイレ","台所","玄関","PC側掃除機","ゴミ捨て"]}
+];
+
+const workList = [
+"男子トイレ",
+"女子トイレ",
+"台所",
+"玄関",
+"軽作業側掃除機",
+"PC側掃除機",
+"ゴミ捨て",
+"炊飯器の釜洗い"
+];
+
+const holidayDiv = document.getElementById("holidayList");
+
+members.forEach((m,i)=>{
+holidayDiv.innerHTML += `
+<div>
+<label>
+<input type="checkbox" id="m${i}">
+${m.name}
+</label>
+</div>`;
+});
+
+function shuffle(array){
+return array.sort(()=>Math.random()-0.5);
+}
+
+function createSchedule(){
+
+const activeMembers = members.filter((m,i)=>
+!document.getElementById(`m${i}`).checked
+);
+
+let used = new Set();
+let result = [];
+
+for(const work of workList){
+
+let candidates = activeMembers.filter(
+m=>m.tasks.includes(work) && !used.has(m.name)
+);
+
+if(candidates.length===0){
+
+candidates = activeMembers.filter(
+m=>m.tasks.includes(work)
+);
+
+if(candidates.length===0){
+result.push([work,"担当者なし"]);
+continue;
+}
+}
+
+const selected =
+shuffle(candidates)[0];
+
+used.add(selected.name);
+
+result.push([work,selected.name]);
+}
+
+let html=`
+<table>
+<tr>
+<th>担当</th>
+<th>当番</th>
+</tr>
+`;
+
+result.forEach(r=>{
+html += `
+<tr>
+<td>${r[0]}</td>
+<td>${r[1]}</td>
+</tr>`;
+});
+
+html += "</table>";
+
+document.getElementById("result").innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
